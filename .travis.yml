@@ -3,7 +3,5 @@ sudo: false  # http://docs.travis-ci.com/user/migrating-from-legacy/
 language: python
 python:
   - 2.7
-  - 3.3
-  - 3.4
 install: pip install -r requirements/dev.txt
-script: py.test tests
+script: py.test --cov-report= --cov=p101stat tests
