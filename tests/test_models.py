@@ -4,64 +4,75 @@ import datetime as dt
 
 import pytest
 
-from p101stat.user.models import Role, User
+from p101stat.idol.models import DailyHistory, Idol
 
-from .factories import UserFactory
+from .factories import IdolFactory
 
 
 @pytest.mark.usefixtures('db')
-class TestUser:
-    """User tests."""
+class TestIdol:
+    """Idol tests."""
 
     def test_get_by_id(self):
-        """Get user by ID."""
-        user = User('foo', 'foo@bar.com')
-        user.save()
+        """Get idol by ID."""
+        idol = Idol(1, 'foo', 18)
+        idol.save()
 
-        retrieved = User.get_by_id(user.id)
-        assert retrieved == user
+        retrieved = Idol.get_by_id(idol.id)
+        assert retrieved == idol
 
-    def test_created_at_defaults_to_datetime(self):
-        """Test creation date."""
-        user = User(username='foo', email='foo@bar.com')
-        user.save()
-        assert bool(user.created_at)
-        assert isinstance(user.created_at, dt.datetime)
+    def test_get_by_idx(self):
+        """Get idol by Mnet index."""
+        idol = Idol(1, 'foo', 18)
+        idol.save()
 
-    def test_password_is_nullable(self):
-        """Test null password."""
-        user = User(username='foo', email='foo@bar.com')
-        user.save()
-        assert user.password is None
+        retrieved = Idol.get_by_id(idol.idx)
+        assert retrieved == idol
+
+    def test_last_updated_defaults_to_datetime(self):
+        """Test update date."""
+        idol = Idol(1, 'foo', 18)
+        idol.save()
+        assert bool(idol.last_updated)
+        assert isinstance(idol.last_updated, dt.datetime)
+
+    def test_first_name_en_is_nullable(self):
+        """Test null name."""
+        idol = Idol(1, 'foo', 18)
+        idol.save()
+        assert idol.first_name_en is None
+
+    def test_last_name_en_is_nullable(self):
+        """Test null name."""
+        idol = Idol(1, 'foo', 18)
+        idol.save()
+        assert idol.last_name_en is None
+
+    def test_agency_is_nullable(self):
+        """Test null agency."""
+        idol = Idol(1, 'foo', 18)
+        idol.save()
+        assert idol.agency is None
 
     def test_factory(self, db):
-        """Test user factory."""
-        user = UserFactory(password='myprecious')
+        """Test idol factory."""
+        idol = IdolFactory()
         db.session.commit()
-        assert bool(user.username)
-        assert bool(user.email)
-        assert bool(user.created_at)
-        assert user.is_admin is False
-        assert user.active is True
-        assert user.check_password('myprecious')
+        assert bool(idol.idx)
+        assert bool(idol.name_kr)
+        assert bool(idol.vote_percentage is not None)
+        assert bool(idol.last_updated)
+        assert idol.is_eliminated is False
+        assert idol.is_vote_restricted is False
 
-    def test_check_password(self):
-        """Check password."""
-        user = User.create(username='foo', email='foo@bar.com',
-                           password='foobarbaz123')
-        assert user.check_password('foobarbaz123') is True
-        assert user.check_password('barfoobaz') is False
+    def name_en(self):
+        """Idol full English name."""
+        idol = IdolFactory(first_name_en='Bar', last_name_en='Foo')
+        assert idol.name_en == 'Foo Bar'
 
-    def test_full_name(self):
-        """User full name."""
-        user = UserFactory(first_name='Foo', last_name='Bar')
-        assert user.full_name == 'Foo Bar'
-
-    def test_roles(self):
-        """Add a role to a user."""
-        role = Role(name='admin')
-        role.save()
-        user = UserFactory()
-        user.roles.append(role)
-        user.save()
-        assert role in user.roles
+    def test_dailies(self):
+        """Add a daily to a user."""
+        idol = IdolFactory()
+        daily = DailyHistory(idol=idol, date=dt.datetime.utcnow().date())
+        daily.save()
+        assert daily in idol.dailies

@@ -8,7 +8,7 @@ from p101stat.app import create_app
 from p101stat.database import db as _db
 from p101stat.settings import TestConfig
 
-from .factories import UserFactory
+from .factories import IdolFactory
 
 
 @pytest.yield_fixture(scope='function')
@@ -44,8 +44,8 @@ def db(app):
 
 
 @pytest.fixture
-def user(db):
-    """A user for the tests."""
-    user = UserFactory(password='myprecious')
+def idol(db):
+    """A idol for the tests."""
+    idol = IdolFactory()
     db.session.commit()
-    return user
+    return idol
