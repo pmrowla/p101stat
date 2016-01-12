@@ -15,8 +15,7 @@ def flash_errors(form, category='warning'):
 
 def fetch_idol(idx):
     """Fetch data for a single idol."""
-    url = r'https://www.produce101event.com'
-    r = requests.post('{}{}'.format(url, '/entry_info.php'), data={'idx': idx})
+    r = requests.post('https://www.produce101event.com/entry_info.php', data={'idx': idx})
     r.raise_for_status()
     idol_data = r.json()
     if idol_data['result'] == 'success' and idol_data['name']:
