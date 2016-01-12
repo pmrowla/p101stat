@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Public section, including homepage."""
-from datetime import date
+from datetime import datetime
 
 from flask import Blueprint, render_template
 from sqlalchemy import desc
@@ -16,7 +16,7 @@ def home():
     """Home page."""
     query = db.session.query(Idol, DailyHistory.rank.label('daily_rank'), DailyHistory.vote_percentage.label('daily_percentage')).\
         join(Idol.dailies).\
-        filter(DailyHistory.date == date.today()).\
+        filter(DailyHistory.date == datetime.utcnow().date()).\
         order_by(desc(Idol.vote_percentage))
     idols = query.all()
     assert(len(idols) == 101)

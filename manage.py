@@ -4,7 +4,7 @@
 from __future__ import unicode_literals
 
 import os
-from datetime import date, datetime
+from datetime import datetime
 from glob import glob
 from subprocess import call
 
@@ -61,7 +61,7 @@ def update_dailies():
     """Update daily rank information."""
     # Do this once to get consistent results in the event that the day changes
     # while we are running this function
-    today = date.today()
+    today = datetime.now().date()
     for i, idol in enumerate(Idol.query.order_by(desc(Idol.vote_percentage)).all()):
         daily = DailyHistory.query.filter(and_(DailyHistory.idol == idol, DailyHistory.date == today)).first()
         if daily:
