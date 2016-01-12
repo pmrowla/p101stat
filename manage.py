@@ -59,8 +59,6 @@ def update_idols():
 @manager.command
 def update_dailies():
     """Update daily rank information."""
-    # Force refresh of data
-    update_idols()
     # Do this once to get consistent results in the event that the day changes
     # while we are running this function
     today = date.today()
