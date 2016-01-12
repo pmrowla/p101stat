@@ -2,6 +2,8 @@
 
 setuptools
 wheel==0.26.0
+cffi
+cryptography
 
 # Flask
 Flask==0.10.1
