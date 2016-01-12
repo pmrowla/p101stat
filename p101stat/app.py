@@ -4,7 +4,7 @@ from flask import Flask, render_template
 
 from p101stat import idol, public
 from p101stat.assets import assets
-from p101stat.extensions import babel, bcrypt, cache, db, debug_toolbar, login_manager, migrate
+from p101stat.extensions import analytics, babel, bcrypt, cache, db, debug_toolbar, login_manager, migrate
 from p101stat.settings import ProdConfig
 
 
@@ -24,6 +24,7 @@ def create_app(config_object=ProdConfig):
 def register_extensions(app):
     """Register Flask extensions."""
     assets.init_app(app)
+    analytics.init_app(app)
     babel.init_app(app)
     bcrypt.init_app(app)
     cache.init_app(app)

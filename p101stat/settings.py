@@ -24,6 +24,8 @@ class ProdConfig(Config):
     DEBUG = False
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL', '')
     DEBUG_TB_ENABLED = False  # Disable Debug toolbar
+    if 'GOOGLE_ANALYTICS_ID' in os.environ:
+        ANALYTICS = {'GOOGLE_ANALYTICS': {'ACCOUNT': os.environ.get('GOOGLE_ANALYTICS_ID')}}
 
 
 class DevConfig(Config):
