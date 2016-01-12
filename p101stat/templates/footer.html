@@ -1,7 +1,11 @@
 <footer>
   <small>
   <ul class="company">
-    <li>All voting data refreshed hourly via Mnet's <a href="http://www.produce101event.com/main.php">official Produce 101 site</a></li>
+    <li>All voting data refreshed hourly via Mnet's <a href="http://www.produce101event.com/main.php">official Produce 101 site</a>. Daily rankings reset at midnight UTC.</li>
+    {% if last_updated %}
+    <br />
+    <li><i>Last updated: {{ last_updated|timedeltaformat }} ago.</i></li>
+    {% endif %}
   </ul>
   </small>
 </footer>

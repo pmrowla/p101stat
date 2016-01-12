@@ -4,16 +4,18 @@
 from __future__ import unicode_literals
 
 import os
+from datetime import date, datetime
 from glob import glob
 from subprocess import call
 
 from flask_migrate import MigrateCommand
 from flask_script import Command, Manager, Option, Server, Shell
 from flask_script.commands import Clean, ShowUrls
+from sqlalchemy import and_, desc
 
 from p101stat.app import create_app
 from p101stat.database import db
-from p101stat.idol.models import Idol
+from p101stat.idol.models import DailyHistory, Idol
 from p101stat.settings import DevConfig, ProdConfig
 from p101stat.utils import fetch_idol
 
@@ -46,12 +48,29 @@ def update_idols():
         if idol_data:
             idol = Idol.query.filter_by(idx=i).first()
             if idol:
-                idol.update(vote_percentage=float(idol_data['per']))
+                idol.update(vote_percentage=float(idol_data['per']), last_updated=datetime.utcnow())
             else:
                 Idol.create(idx=i, name_kr=idol_data['name'], age=int(idol_data['age']),
                             agency=idol_data['agency'], comment=idol_data['comment'],
                             vote_percentage=float(idol_data['per']))
     print 'Successfully fetched p101 idol data.'
+
+
+@manager.command
+def update_dailies():
+    """Update daily rank information."""
+    # Force refresh of data
+    update_idols()
+    # Do this once to get consistent results in the event that the day changes
+    # while we are running this function
+    today = date.today()
+    for i, idol in enumerate(Idol.query.order_by(desc(Idol.vote_percentage)).all()):
+        daily = DailyHistory.query.filter(and_(DailyHistory.idol == idol, DailyHistory.date == today)).first()
+        if daily:
+            daily.update(vote_percentage=idol.vote_percentage, rank=i + 1)
+        else:
+            DailyHistory.create(idol=idol, date=today, vote_percentage=idol.vote_percentage, rank=i + 1)
+    print 'Successfully updated dailies'
 
 
 class Lint(Command):

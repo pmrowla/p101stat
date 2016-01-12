@@ -2,7 +2,11 @@
 """User models."""
 from __future__ import unicode_literals
 
-from p101stat.database import Column, Model, SurrogatePK, db
+from datetime import datetime
+
+from sqlalchemy import UniqueConstraint
+
+from p101stat.database import Column, Model, SurrogatePK, db, reference_col, relationship
 
 
 class Idol(SurrogatePK, Model):
@@ -20,6 +24,7 @@ class Idol(SurrogatePK, Model):
     vote_percentage = Column(db.Float(), default=0.0, nullable=False)
     is_eliminated = Column(db.Boolean(), default=False, nullable=False)
     is_vote_restricted = Column(db.Boolean(), default=False, nullable=False)
+    last_updated = Column(db.DateTime(), default=datetime.utcnow(), nullable=True)
 
     def __init__(self, idx, name_kr, age, **kwargs):
         """Create instance."""
@@ -36,3 +41,16 @@ class Idol(SurrogatePK, Model):
     def __repr__(self):
         """Represent instance as a unique string."""
         return '<Idol({name!r})>'.format(name=self.name_en)
+
+
+class DailyHistory(SurrogatePK, Model):
+    """Daily voting history for Produce 101 idols."""
+
+    __tablename__ = 'daily_history'
+    idol_id = reference_col('idols')
+    idol = relationship('Idol', backref='dailies')
+    date = Column(db.Date(), nullable=False)
+    vote_percentage = Column(db.Float(), default=0.0, nullable=False)
+    rank = Column(db.Integer, default=0, nullable=False)
+
+    UniqueConstraint('idol_id', 'date')

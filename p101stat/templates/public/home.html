@@ -3,22 +3,42 @@
 {% block content %}
 <!-- Main jumbotron for a primary marketing message or call to action -->
 <div class="body-content">
-  <h1>Current Member Ranking</h1>
+  <h1>Current Member Rankings</h1>
   <div class="row">
     <div class="col-lg-8">
       <table class="table">
         <tr>
-          <th>Rank</th>
+          <th>Rank (daily change)</th>
           <th>Name</th>
           <th>Agency</th>
-          <th>Votes</th>
+          <th>Votes (daily change)</th>
         </tr>
-        {% for idol in idols %}
+        {% for idol, daily_rank, daily_percentage in idols %}
         <tr>
-          <td>{{ loop.index }}</td>
+          <td>
+            {{ loop.index }}
+            {% if daily_rank %}
+              {% set diff = daily_rank - loop.index %}
+              {% if diff > 0 %}
+              (<span style="color:green">
+                <i class="fa fa-long-arrow-up"></i> {{ diff }}
+              </span>)
+              {% elif diff < 0 %}
+              (<span style="color:red">
+                <i class="fa fa-long-arrow-down"></i> {{ diff|abs }}
+              </span>)
+              {% else %}
+              (<i class="fa fa-arrows-h"></i>)
+              {% endif %}
+            {% endif %}
+          </td>
           <td>{{ idol.name_kr }}{% if idol.name_en %} ({{ idol.name_en }}){% endif %}</td>
           <td>{{ idol.agency }}</td>
-          <td>{{ '%.02f%%'|format(idol.vote_percentage) }}
+          <td>
+            {% set diff = idol.vote_percentage - daily_percentage %}
+            {{ '%.02f%%'|format(idol.vote_percentage) }}
+            ({% if diff > 0 %}<span style="color:green">+{% elif diff < 0 %}<span style="color:red">{% endif %}{{ '%.02f'|format(diff) }}{% if diff != 0 %}</span>{% endif %})
+          </td>
         </tr>
         {% endfor %}
       </table>
