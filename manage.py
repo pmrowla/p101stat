@@ -46,13 +46,11 @@ def update_idols():
         if idol_data:
             idol = Idol.query.filter_by(idx=i).first()
             if idol:
-                idol.vote_percentage = float(idol_data['per'])
+                idol.update(vote_percentage=float(idol_data['per']))
             else:
-                idol = Idol(idx=i, name_kr=idol_data['name'], age=int(idol_data['age']),
+                Idol.create(idx=i, name_kr=idol_data['name'], age=int(idol_data['age']),
                             agency=idol_data['agency'], comment=idol_data['comment'],
                             vote_percentage=float(idol_data['per']))
-                db.session.add(idol)
-            db.session.commit()
     print 'Successfully fetched p101 idol data.'
 
 
