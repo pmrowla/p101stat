@@ -2,7 +2,7 @@
 """The app module, containing the app factory function."""
 from flask import Flask, render_template
 
-from p101stat import public, user
+from p101stat import idol, public
 from p101stat.assets import assets
 from p101stat.extensions import bcrypt, cache, db, debug_toolbar, login_manager, migrate
 from p101stat.settings import ProdConfig
@@ -36,7 +36,7 @@ def register_extensions(app):
 def register_blueprints(app):
     """Register Flask blueprints."""
     app.register_blueprint(public.views.blueprint)
-    app.register_blueprint(user.views.blueprint)
+    app.register_blueprint(idol.views.blueprint)
     return None
 
 
