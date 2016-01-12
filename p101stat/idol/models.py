@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """User models."""
+from __future__ import unicode_literals
 
 from p101stat.database import Column, Model, SurrogatePK, db
 
@@ -25,10 +26,13 @@ class Idol(SurrogatePK, Model):
         db.Model.__init__(self, idx=idx, name_kr=name_kr, age=age, **kwargs)
 
     @property
-    def full_name_en(self):
-        """Full English name in First Last format."""
-        return '{0} {1}'.format(self.first_name_en, self.last_name_en)
+    def name_en(self):
+        """English name in Last First format."""
+        if self.last_name_en:
+            return '{0} {1}'.format(self.last_name_en, self.first_name_en)
+        else:
+            return ''
 
     def __repr__(self):
         """Represent instance as a unique string."""
-        return '<Idol({name_kr!r})>'.format(name_kr=self.name_kr)
+        return '<Idol({name!r})>'.format(name=self.name_en)

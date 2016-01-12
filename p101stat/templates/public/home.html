@@ -16,7 +16,7 @@
         {% for idol in idols %}
         <tr>
           <td>{{ loop.index }}</td>
-          <td>{{ idol.name_kr }}</td>
+          <td>{{ idol.name_kr }}{% if idol.name_en %} ({{ idol.name_en }}){% endif %}</td>
           <td>{{ idol.agency }}</td>
           <td>{{ '%.02f%%'|format(idol.vote_percentage) }}
         </tr>
