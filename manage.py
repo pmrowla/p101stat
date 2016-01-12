@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """Management script."""
+from __future__ import unicode_literals
+
 import os
 from glob import glob
 from subprocess import call
@@ -11,8 +13,9 @@ from flask_script.commands import Clean, ShowUrls
 
 from p101stat.app import create_app
 from p101stat.database import db
+from p101stat.idol.models import Idol
 from p101stat.settings import DevConfig, ProdConfig
-from p101stat.user.models import User
+from p101stat.utils import fetch_idol
 
 CONFIG = ProdConfig if os.environ.get('P101STAT_ENV') == 'prod' else DevConfig
 HERE = os.path.abspath(os.path.dirname(__file__))
@@ -23,8 +26,8 @@ manager = Manager(app)
 
 
 def _make_context():
-    """Return context dict for a shell session so you can access app, db, and the User model by default."""
-    return {'app': app, 'db': db, 'User': User}
+    """Return context dict for a shell session so you can access app, db, and the Idol model by default."""
+    return {'app': app, 'db': db, 'Idol': Idol}
 
 
 @manager.command
@@ -33,6 +36,24 @@ def test():
     import pytest
     exit_code = pytest.main([TEST_PATH, '--verbose'])
     return exit_code
+
+
+@manager.command
+def update_idols():
+    """Update db entries for all p101 idols."""
+    for i in range(1, 102):
+        idol_data = fetch_idol(i)
+        if idol_data:
+            idol = Idol.query.filter_by(idx=i).first()
+            if idol:
+                idol.vote_percentage = float(idol_data['per'])
+            else:
+                idol = Idol(idx=i, name_kr=idol_data['name'], age=int(idol_data['age']),
+                            agency=idol_data['agency'], comment=idol_data['comment'],
+                            vote_percentage=float(idol_data['per']))
+                db.session.add(idol)
+            db.session.commit()
+    print 'Successfully fetched p101 idol data.'
 
 
 class Lint(Command):
