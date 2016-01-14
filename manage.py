@@ -28,8 +28,8 @@ manager = Manager(app)
 
 
 def _make_context():
-    """Return context dict for a shell session so you can access app, db, and the Idol model by default."""
-    return {'app': app, 'db': db, 'Idol': Idol}
+    """Return context dict for a shell session so you can access app, db, and the default models."""
+    return {'app': app, 'db': db, 'Idol': Idol, 'DailyHistory': DailyHistory}
 
 
 @manager.command
@@ -53,6 +53,10 @@ def update_idols():
                 Idol.create(idx=i, name_kr=idol_data['name'], age=int(idol_data['age']),
                             agency=idol_data['agency'], comment=idol_data['comment'],
                             vote_percentage=float(idol_data['per']))
+    for i, idol in enumerate(Idol.query.order_by(desc(Idol.vote_percentage)).all()):
+        # we don't update previous rank here, this should only be done daily
+        # (see update_dailies)
+        idol.update(rank=i + 1)
     print 'Successfully fetched p101 idol data.'
 
 
@@ -67,7 +71,8 @@ def update_dailies():
         if daily:
             daily.update(vote_percentage=idol.vote_percentage, rank=i + 1)
         else:
-            DailyHistory.create(idol=idol, date=today, vote_percentage=idol.vote_percentage, rank=i + 1)
+            daily = DailyHistory.create(idol=idol, date=today, vote_percentage=idol.vote_percentage, rank=i + 1)
+        idol.update(prev_rank=daily.rank, prev_vote_percentage=daily.vote_percentage)
     print 'Successfully updated dailies'
 
 

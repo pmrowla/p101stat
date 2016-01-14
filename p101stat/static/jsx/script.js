@@ -13,12 +13,6 @@ var RankDiv = React.createClass({
     var idol_payload = {
       "order_by": [{"field": "vote_percentage", "direction": "desc"}]
     };
-    var history_payload = {
-      "filters": [
-        {"name": "date", "op": "eq", "val": now.getUTCFullYear() + '-' + month + '-' + now.getUTCDate()}
-      ],
-      "order_by": [{"field": "idol_id", "direction": "asc"}]
-    };
     $.ajax({
       url: this.props.idol_url,
       data: {"q": JSON.stringify(idol_payload), "results_per_page": 101},
@@ -27,19 +21,6 @@ var RankDiv = React.createClass({
       cache: false,
       success: function(result) {
         this.setState({idol_data: result});
-      }.bind(this),
-      error: function(xhr, status, err) {
-        console.error(this.props.url, status, err.toString());
-      }.bind(this)
-    });
-    $.ajax({
-      url: this.props.history_url,
-      data: {"q": JSON.stringify(history_payload), "results_per_page": 101},
-      dataType: 'json',
-      contentType: "application/json",
-      cache: false,
-      success: function(result) {
-        this.setState({history_data: result});
       }.bind(this),
       error: function(xhr, status, err) {
         console.error(this.props.url, status, err.toString());
@@ -61,10 +42,9 @@ var RankDiv = React.createClass({
 
 var RankTable = React.createClass({
   render: function() {
-    var history = this.props.history;
-    var rankRows = this.props.idols.map(function(idol, rank) {
+    var rankRows = this.props.idols.map(function(idol) {
       return (
-        <RankRow key={idol.id} idol={idol} rank={rank + 1} />
+        <RankRow key={idol.id} idol={idol} />
       );
     });
     return (
@@ -84,65 +64,31 @@ var RankTable = React.createClass({
 });
 
 var RankRow = React.createClass({
-  loadCommentsFromServer: function() {
-    var now = new Date;
-    var month = now.getUTCMonth() + 1;
-    var history_payload = {
-      "filters": [
-        {"name": "date", "op": "eq", "val": now.getUTCFullYear() + '-' + month + '-' + now.getUTCDate()},
-        {"name": "idol_id", "op": "eq", "val": this.props.idol.id}
-      ],
-      "order_by": [{"field": "idol_id", "direction": "asc"}]
-    };
-    $.ajax({
-      url: '/api/daily_history',
-      data: {"q": JSON.stringify(history_payload), "results_per_page": 101},
-      dataType: 'json',
-      contentType: "application/json",
-      cache: false,
-      success: function(result) {
-        this.setState({history_data: result});
-      }.bind(this),
-      error: function(xhr, status, err) {
-        console.error(this.props.url, status, err.toString());
-      }.bind(this)
-    });
-  },
-  getInitialState: function() {
-    return {history_data: {"objects": []}};
-  },
-  componentDidMount: function() {
-    this.loadCommentsFromServer();
-  },
   render: function() {
     var idol = this.props.idol;
-    var history = this.state.history_data.objects;
     var name_en = '';
     if (idol.last_name_en && idol.first_name_en) {
       name_en = ' (' + idol.last_name_en + idol.first_name_en + ')';
     }
     var rank_span;
     var vote_span;
-    if (history.length > 0)
-    {
-      var rank_change = history[0].rank - this.props.rank;
-      if (rank_change > 0) {
+    var rank_change = idol.prev_rank - idol.rank;
+    if (rank_change > 0) {
         rank_span = <span style={{color: "green"}}><i className="fa fa-long-arrow-up"></i> {rank_change}</span>;
-      }
-      else if (rank_change < 0) {
+    }
+    else if (rank_change < 0) {
         rank_span = <span style={{color: "red"}}><i className="fa fa-long-arrow-down"></i> {rank_change}</span>;
-      }
-      else {
+    }
+    else {
         rank_span = <i className="fa fa-arrows-h"></i>;
-      }
+    }
 
-      var vote_change = idol.vote_percentage - history[0].vote_percentage;
-      if (vote_change > 0) {
+    var vote_change = idol.vote_percentage - idol.prev_vote_percentage;
+    if (vote_change > 0) {
         vote_span = <span style={{color: "green"}}>+{vote_change.toFixed(2)}</span>;
-      }
-      else if (vote_change < 0) {
+    }
+    else if (vote_change < 0) {
         vote_span = <span style={{color: "red"}}>{vote_change.toFixed(2)}</span>;
-      }
     }
     return (
       <tr>
@@ -158,6 +104,6 @@ var RankRow = React.createClass({
 });
 
 ReactDOM.render(
-  <RankDiv idol_url="/api/idols" history_url="/api/daily_history" />,
+  <RankDiv idol_url="/api/idols" />,
   document.getElementById('rank-table')
 );

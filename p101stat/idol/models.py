@@ -25,6 +25,9 @@ class Idol(SurrogatePK, Model):
     is_eliminated = Column(db.Boolean(), default=False, nullable=False)
     is_vote_restricted = Column(db.Boolean(), default=False, nullable=False)
     last_updated = Column(db.DateTime(), default=datetime.utcnow(), nullable=True)
+    rank = Column(db.Integer(), default=0, server_default='0', nullable=False)
+    prev_rank = Column(db.Integer(), default=0, server_default='0', nullable=False)
+    prev_vote_percentage = Column(db.Float(), default=0.0, server_default='0.0', nullable=False)
 
     def __init__(self, idx, name_kr, age, **kwargs):
         """Create instance."""
