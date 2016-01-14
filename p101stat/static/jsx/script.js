@@ -1,4 +1,3 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /** @jsx React.DOM */
 
 (function($, window) {
@@ -7,7 +6,7 @@
 
 }).call(this, jQuery, window);
 
-var RankDiv = React.createClass({displayName: "RankDiv",
+var RankDiv = React.createClass({
   loadCommentsFromServer: function() {
     var now = new Date;
     var month = now.getUTCMonth() + 1;
@@ -55,36 +54,36 @@ var RankDiv = React.createClass({displayName: "RankDiv",
   },
   render: function() {
     return (
-        React.createElement(RankTable, {idols: this.state.idol_data.objects})
+        <RankTable idols={this.state.idol_data.objects} />
     );
   }
 });
 
-var RankTable = React.createClass({displayName: "RankTable",
+var RankTable = React.createClass({
   render: function() {
     var history = this.props.history;
     var rankRows = this.props.idols.map(function(idol, rank) {
       return (
-        React.createElement(RankRow, {key: idol.id, idol: idol, rank: rank + 1})
+        <RankRow key={idol.id} idol={idol} rank={rank + 1} />
       );
     });
     return (
-      React.createElement("table", {className: "table"}, 
-        React.createElement("tbody", null, 
-          React.createElement("tr", null, 
-            React.createElement("th", null, "Rank (daily change)"), 
-            React.createElement("th", null, "Name"), 
-            React.createElement("th", null, "Agency"), 
-            React.createElement("th", null, "Votes (daily change)")
-          ), 
-          rankRows
-        )
-      )
+      <table className="table">
+        <tbody>
+          <tr>
+            <th>Rank (daily change)</th>
+            <th>Name</th>
+            <th>Agency</th>
+            <th>Votes (daily change)</th>
+          </tr>
+          {rankRows}
+        </tbody>
+      </table>
     );
   }
 });
 
-var RankRow = React.createClass({displayName: "RankRow",
+var RankRow = React.createClass({
   loadCommentsFromServer: function() {
     var now = new Date;
     var month = now.getUTCMonth() + 1;
@@ -128,40 +127,37 @@ var RankRow = React.createClass({displayName: "RankRow",
     {
       var rank_change = history[0].rank - this.props.rank;
       if (rank_change > 0) {
-        rank_span = React.createElement("span", {style: {color: "green"}}, React.createElement("i", {className: "fa fa-long-arrow-up"}), " ", rank_change);
+        rank_span = <span style={{color: "green"}}><i className="fa fa-long-arrow-up"></i> {rank_change}</span>;
       }
       else if (rank_change < 0) {
-        rank_span = React.createElement("span", {style: {color: "red"}}, React.createElement("i", {className: "fa fa-long-arrow-down"}), " ", rank_change);
+        rank_span = <span style={{color: "red"}}><i className="fa fa-long-arrow-down"></i> {rank_change}</span>;
       }
       else {
-        rank_span = React.createElement("i", {className: "fa fa-arrows-h"});
+        rank_span = <i className="fa fa-arrows-h"></i>;
       }
 
       var vote_change = idol.vote_percentage - history[0].vote_percentage;
       if (vote_change > 0) {
-        vote_span = React.createElement("span", {style: {color: "green"}}, "+", vote_change.toFixed(2));
+        vote_span = <span style={{color: "green"}}>+{vote_change.toFixed(2)}</span>;
       }
       else if (vote_change < 0) {
-        vote_span = React.createElement("span", {style: {color: "red"}}, vote_change.toFixed(2));
+        vote_span = <span style={{color: "red"}}>{vote_change.toFixed(2)}</span>;
       }
     }
     return (
-      React.createElement("tr", null, 
-        React.createElement("td", null, this.props.rank, " (", rank_span, ")"), 
-        React.createElement("td", null, 
-          idol.name_kr, name_en
-        ), 
-        React.createElement("td", null, idol.agency), 
-        React.createElement("td", null, idol.vote_percentage.toFixed(2), "% (", vote_span, ")")
-      )
+      <tr>
+        <td>{this.props.rank} ({rank_span})</td>
+        <td>
+          {idol.name_kr}{name_en}
+        </td>
+        <td>{idol.agency}</td>
+        <td>{idol.vote_percentage.toFixed(2)}% ({vote_span})</td>
+      </tr>
     );
   }
 });
 
 ReactDOM.render(
-  React.createElement(RankDiv, {idol_url: "/api/idols", history_url: "/api/daily_history"}),
+  <RankDiv idol_url="/api/idols" history_url="/api/daily_history" />,
   document.getElementById('rank-table')
 );
-
-
-},{}]},{},[1])

@@ -1,0 +1,31 @@
+{
+  "name": "p101stat",
+  "version": "1.0.0",
+  "description": "Produce 101 Stats",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pmrowla/p101stat.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pmrowla/p101stat/issues"
+  },
+  "homepage": "https://github.com/pmrowla/p101stat#readme",
+  "devDependencies": {
+    "bower": "^1.7.2",
+    "gulp": "^3.9.0",
+    "gulp-browserify": "^0.5.1",
+    "gulp-clean": "^0.3.1",
+    "gulp-size": "^1.2.1",
+    "react": "^0.14.6",
+    "reactify": "^1.0.0"
+  }
+}
