@@ -77,7 +77,7 @@ var RankRow = React.createClass({
         rank_span = <span style={{color: "green"}}><i className="fa fa-long-arrow-up"></i> {rank_change}</span>;
     }
     else if (rank_change < 0) {
-        rank_span = <span style={{color: "red"}}><i className="fa fa-long-arrow-down"></i> {rank_change}</span>;
+        rank_span = <span style={{color: "red"}}><i className="fa fa-long-arrow-down"></i> {Math.abs(rank_change)}</span>;
     }
     else {
         rank_span = <i className="fa fa-arrows-h"></i>;

@@ -78,7 +78,7 @@ var RankRow = React.createClass({displayName: "RankRow",
         rank_span = React.createElement("span", {style: {color: "green"}}, React.createElement("i", {className: "fa fa-long-arrow-up"}), " ", rank_change);
     }
     else if (rank_change < 0) {
-        rank_span = React.createElement("span", {style: {color: "red"}}, React.createElement("i", {className: "fa fa-long-arrow-down"}), " ", rank_change);
+        rank_span = React.createElement("span", {style: {color: "red"}}, React.createElement("i", {className: "fa fa-long-arrow-down"}), " ", Math.abs(rank_change));
     }
     else {
         rank_span = React.createElement("i", {className: "fa fa-arrows-h"});
