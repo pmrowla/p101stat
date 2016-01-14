@@ -68,7 +68,7 @@ var RankRow = React.createClass({
     var idol = this.props.idol;
     var name_en = '';
     if (idol.last_name_en && idol.first_name_en) {
-      name_en = ' (' + idol.last_name_en + idol.first_name_en + ')';
+      name_en = ' (' + idol.last_name_en + ' ' + idol.first_name_en + ')';
     }
     var rank_span;
     var vote_span;
@@ -92,10 +92,8 @@ var RankRow = React.createClass({
     }
     return (
       <tr>
-        <td>{this.props.rank} ({rank_span})</td>
-        <td>
-          {idol.name_kr}{name_en}
-        </td>
+        <td>{idol.rank} ({rank_span})</td>
+        <td>{idol.name_kr} {name_en}</td>
         <td>{idol.agency}</td>
         <td>{idol.vote_percentage.toFixed(2)}% ({vote_span})</td>
       </tr>

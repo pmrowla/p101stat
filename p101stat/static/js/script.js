@@ -69,7 +69,7 @@ var RankRow = React.createClass({displayName: "RankRow",
     var idol = this.props.idol;
     var name_en = '';
     if (idol.last_name_en && idol.first_name_en) {
-      name_en = ' (' + idol.last_name_en + idol.first_name_en + ')';
+      name_en = ' (' + idol.last_name_en + ' ' + idol.first_name_en + ')';
     }
     var rank_span;
     var vote_span;
@@ -93,10 +93,8 @@ var RankRow = React.createClass({displayName: "RankRow",
     }
     return (
       React.createElement("tr", null, 
-        React.createElement("td", null, this.props.rank, " (", rank_span, ")"), 
-        React.createElement("td", null, 
-          idol.name_kr, name_en
-        ), 
+        React.createElement("td", null, idol.rank, " (", rank_span, ")"), 
+        React.createElement("td", null, idol.name_kr, " ", name_en), 
         React.createElement("td", null, idol.agency), 
         React.createElement("td", null, idol.vote_percentage.toFixed(2), "% (", vote_span, ")")
       )
