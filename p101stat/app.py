@@ -5,7 +5,7 @@ from flask_analytics import Analytics
 
 from p101stat import idol, public
 from p101stat.assets import assets
-from p101stat.extensions import babel, bcrypt, cache, db, debug_toolbar, login_manager, migrate
+from p101stat.extensions import api_manager, babel, bcrypt, cache, db, debug_toolbar, login_manager, migrate
 from p101stat.settings import ProdConfig
 
 
@@ -33,6 +33,8 @@ def register_extensions(app):
     login_manager.init_app(app)
     debug_toolbar.init_app(app)
     migrate.init_app(app, db)
+    api_manager.init_app(app, flask_sqlalchemy_db=db)
+    register_apis(app)
     return None
 
 
@@ -40,6 +42,13 @@ def register_blueprints(app):
     """Register Flask blueprints."""
     app.register_blueprint(public.views.blueprint)
     app.register_blueprint(idol.views.blueprint)
+    return None
+
+
+def register_apis(app):
+    """Register restless endpoints."""
+    api_manager.create_api(idol.models.Idol, methods=['GET'], exclude_columns=['dailies', 'idx'], max_results_per_page=101, app=app)
+    api_manager.create_api(idol.models.DailyHistory, methods=['GET'], exclude_columns=['idol'], max_results_per_page=101, app=app)
     return None
 
 

@@ -19,6 +19,5 @@ def home():
         filter(DailyHistory.date == datetime.utcnow().date()).\
         order_by(desc(Idol.vote_percentage))
     idols = query.all()
-    assert(len(idols) == 101)
     last_updated = idols[0][0].last_updated
     return render_template('public/home.html', idols=idols, last_updated=last_updated)

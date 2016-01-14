@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Extensions module. Each extension is initialized in the app factory located in app.py."""
 from flask.ext.babel import Babel
+from flask.ext.restless import APIManager
 from flask_bcrypt import Bcrypt
 from flask_cache import Cache
 from flask_debugtoolbar import DebugToolbarExtension
@@ -15,3 +16,4 @@ db = SQLAlchemy()
 migrate = Migrate()
 cache = Cache()
 debug_toolbar = DebugToolbarExtension()
+api_manager = APIManager()

@@ -6,7 +6,7 @@ from datetime import datetime
 
 from sqlalchemy import UniqueConstraint
 
-from p101stat.database import Column, Model, SurrogatePK, db, reference_col, relationship
+from ..database import Column, Model, SurrogatePK, db, reference_col, relationship
 
 
 class Idol(SurrogatePK, Model):
