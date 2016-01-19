@@ -3,8 +3,8 @@
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@pmrowla" />
 <meta name="twitter:title" content="Produce 101 Member Rankings" />
-<meta name="twitter:description" content="Current top five:{% for i in top_five %} {{ loop.index }}: {{ i.name_kr }} ({{ i.name_en }}){% endfor %}" />
-<meta name="twitter:image" content="{{ url_for('static', filename='public/img/' ~ top_five[0].id ~ '_thumb.jpg', _external=True) }}" />
+<meta name="twitter:description" content="Live Produce 101 voting statistics updated hourly." />
+<meta name="twitter:image" content="{{ url_for('static', filename='public/img/twitter_preview.png', _external=True) }}" />
 {% endblock %}
 
 {% block content %}
