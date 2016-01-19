@@ -42,13 +42,15 @@ var IdolTabDiv = React.createClass({displayName: "IdolTabDiv",
   render: function() {
     var i;
     return (
-      React.createElement("div", {className: "row-fluid"}, 
-        React.createElement("div", {className: "col-xs-4 pull-right"}, 
-          React.createElement(IdolPanel, {idol: this.state.idolData.objects[this.state.selectedIndex]})
+      React.createElement("div", null, 
+        React.createElement("div", {className: "modal fade", id: "idolModal", tabIndex: "-1", role: "dialog", "aria-labelledby": "idolModal"}, 
+          React.createElement(IdolModalDialog, {idol: this.state.idolData.objects[this.state.selectedIndex]})
         ), 
-        React.createElement("div", {className: "col-xs-8"}, 
-          React.createElement("div", {className: "table-responsive", style: {height: "600px", overflowY: "scroll"}}, 
-            React.createElement(RankTable, {idols: this.state.idolData.objects, selectedIndex: this.state.selectedIndex, onClick: this.handleIdolSelect})
+        React.createElement("div", {className: "row-fluid"}, 
+          React.createElement("div", {className: "col-md-12"}, 
+            React.createElement("div", null, 
+              React.createElement(RankTable, {idols: this.state.idolData.objects, selectedIndex: this.state.selectedIndex, onClick: this.handleIdolSelect})
+            )
           )
         )
       )
@@ -118,7 +120,7 @@ var RankRow = React.createClass({displayName: "RankRow",
       vote_span = React.createElement("span", null, vote_change.toFixed(2))
     }
     return (
-      React.createElement("tr", {className: rowClass, onClick: this.props.onClick}, 
+      React.createElement("tr", {type: "button", className: rowClass, onClick: this.props.onClick, "data-toggle": "modal", "data-target": "#idolModal"}, 
         React.createElement("th", {className: "text-right"}, idol.rank), 
         React.createElement("td", null, "(", rank_span, ")"), 
         React.createElement("td", null, idol.name_kr, " ", name_en), 
@@ -129,7 +131,7 @@ var RankRow = React.createClass({displayName: "RankRow",
   }
 });
 
-var IdolPanel = React.createClass({displayName: "IdolPanel",
+var IdolModalDialog = React.createClass({displayName: "IdolModalDialog",
   render: function() {
     var idol = this.props.idol;
     if (idol !== undefined)
@@ -140,28 +142,35 @@ var IdolPanel = React.createClass({displayName: "IdolPanel",
       }
       var img_url="/static/public/img/" + idol.id + "_thumb.jpg";
       return (
-        React.createElement("div", {className: "panel panel-default"}, 
-          React.createElement("div", {className: "panel-heading"}, React.createElement("h3", null, "#", idol.rank, " - ", idol.name_kr, " ", name_en)), 
-          React.createElement("div", {className: "panel-body"}, 
-            React.createElement("img", {className: "img-responsive center-block img-circle", src: img_url, alt: idol.name_kr, height: "300", width: "300"})
-          ), 
-          React.createElement("table", {className: "table"}, 
-            React.createElement("tbody", null, 
-              React.createElement("tr", null, 
-                React.createElement("td", {colSpan: "2", className: "col-xs-4"}, 
-                  React.createElement("div", {className: "progress", style: {marginBottom: "0"}}, 
-                    React.createElement("div", {className: "progress-bar", role: "progressbar", "aria-valuenow": idol.vote_percentage.toFixed(0), ariaValuemin: "0", ariaValuemax: "100", style: {width: idol.vote_percentage.toFixed(0) + '%', minWidth: "4em"}}, idol.vote_percentage.toFixed(2), "%")
+        React.createElement("div", {className: "modal-dialog", role: "document"}, 
+          React.createElement("div", {className: "modal-content"}, 
+            React.createElement("div", {className: "modal-header"}, 
+              React.createElement("button", {type: "button", className: "close", "data-dismiss": "modal", "aria-label": "Close"}, React.createElement("span", {"aria-hidden": "true"}, "×")), 
+              React.createElement("h4", {className: "modal-title", id: "idolModalLabel"}, "#", idol.rank, " - ", idol.name_kr, " ", name_en)
+            ), 
+            React.createElement("div", {className: "modal-body"}, 
+              React.createElement("div", {className: "row"}, 
+                React.createElement("img", {className: "img-responsive center-block img-circle", src: img_url, alt: idol.name_kr, height: "300", width: "300"}), 
+                React.createElement("table", {className: "table"}, 
+                  React.createElement("tbody", null, 
+                    React.createElement("tr", null, 
+                      React.createElement("td", {colSpan: "2", className: "col-xs-4"}, 
+                        React.createElement("div", {className: "progress", style: {marginBottom: "0"}}, 
+                          React.createElement("div", {className: "progress-bar", role: "progressbar", "aria-valuenow": idol.vote_percentage.toFixed(0), "aria-valuemin": "0", "aria-valuemax": "100", style: {width: idol.vote_percentage.toFixed(0) + '%', minWidth: "4em"}}, idol.vote_percentage.toFixed(2), "%")
+                        )
+                      )
+                    ), 
+                    React.createElement("tr", null, 
+                      React.createElement("th", {className: "col-xs-1 text-right"}, "Age"), React.createElement("td", {className: "col-xs-3"}, idol.age)
+                    ), 
+                    React.createElement("tr", null, 
+                      React.createElement("th", {className: "col-xs-1 text-right"}, "Agency"), React.createElement("td", {className: "col-xs-3"}, idol.agency)
+                    ), 
+                    React.createElement("tr", null, 
+                      React.createElement("td", {className: "text-center", colSpan: "2"}, idol.comment)
+                    )
                   )
                 )
-              ), 
-              React.createElement("tr", null, 
-                React.createElement("th", {className: "col-xs-1 text-right"}, "Age"), React.createElement("td", {className: "col-xs-3"}, idol.age)
-              ), 
-              React.createElement("tr", null, 
-                React.createElement("th", {className: "col-xs-1 text-right"}, "Agency"), React.createElement("td", {className: "col-xs-3"}, idol.agency)
-              ), 
-              React.createElement("tr", null, 
-                React.createElement("td", {className: "text-center", colSpan: "2"}, idol.comment)
               )
             )
           )

@@ -41,13 +41,15 @@ var IdolTabDiv = React.createClass({
   render: function() {
     var i;
     return (
-      <div className="row-fluid">
-        <div className="col-xs-4 pull-right">
-          <IdolPanel idol={this.state.idolData.objects[this.state.selectedIndex]} />
+      <div>
+        <div className="modal fade" id="idolModal" tabIndex="-1" role="dialog" aria-labelledby="idolModal">
+          <IdolModalDialog idol={this.state.idolData.objects[this.state.selectedIndex]} />
         </div>
-        <div className="col-xs-8">
-          <div className="table-responsive" style={{height: "600px", overflowY: "scroll"}}>
-            <RankTable idols={this.state.idolData.objects} selectedIndex={this.state.selectedIndex} onClick={this.handleIdolSelect}/>
+        <div className="row-fluid">
+          <div className="col-md-12">
+            <div>
+              <RankTable idols={this.state.idolData.objects} selectedIndex={this.state.selectedIndex} onClick={this.handleIdolSelect}/>
+            </div>
           </div>
         </div>
       </div>
@@ -117,7 +119,7 @@ var RankRow = React.createClass({
       vote_span = <span>{vote_change.toFixed(2)}</span>
     }
     return (
-      <tr className={rowClass} onClick={this.props.onClick}>
+      <tr type="button" className={rowClass} onClick={this.props.onClick} data-toggle="modal" data-target="#idolModal">
         <th className="text-right">{idol.rank}</th>
         <td>({rank_span})</td>
         <td>{idol.name_kr} {name_en}</td>
@@ -128,7 +130,7 @@ var RankRow = React.createClass({
   }
 });
 
-var IdolPanel = React.createClass({
+var IdolModalDialog = React.createClass({
   render: function() {
     var idol = this.props.idol;
     if (idol !== undefined)
@@ -139,31 +141,38 @@ var IdolPanel = React.createClass({
       }
       var img_url="/static/public/img/" + idol.id + "_thumb.jpg";
       return (
-        <div className="panel panel-default">
-          <div className="panel-heading"><h3>#{idol.rank} - {idol.name_kr} {name_en}</h3></div>
-          <div className="panel-body">
-            <img className="img-responsive center-block img-circle" src={img_url} alt={idol.name_kr} height="300" width="300" />
+        <div className="modal-dialog" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 className="modal-title" id="idolModalLabel">#{idol.rank} - {idol.name_kr} {name_en}</h4>
+            </div>
+            <div className="modal-body">
+              <div className="row">
+                <img className="img-responsive center-block img-circle" src={img_url} alt={idol.name_kr} height="300" width="300" />
+                <table className="table">
+                  <tbody>
+                    <tr>
+                      <td colSpan="2" className="col-xs-4">
+                        <div className="progress" style={{marginBottom: "0"}}>
+                          <div className="progress-bar" role="progressbar" aria-valuenow={idol.vote_percentage.toFixed(0)} aria-valuemin="0" aria-valuemax="100" style={{width: idol.vote_percentage.toFixed(0) + '%', minWidth: "4em"}}>{idol.vote_percentage.toFixed(2)}%</div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th className="col-xs-1 text-right">Age</th><td className="col-xs-3">{idol.age}</td>
+                    </tr>
+                    <tr>
+                      <th className="col-xs-1 text-right">Agency</th><td className="col-xs-3">{idol.agency}</td>
+                    </tr>
+                    <tr>
+                      <td className="text-center" colSpan="2">{idol.comment}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
-          <table className="table">
-            <tbody>
-              <tr>
-                <td colSpan="2" className="col-xs-4">
-                  <div className="progress" style={{marginBottom: "0"}}>
-                    <div className="progress-bar" role="progressbar" aria-valuenow={idol.vote_percentage.toFixed(0)} ariaValuemin="0" ariaValuemax="100" style={{width: idol.vote_percentage.toFixed(0) + '%', minWidth: "4em"}}>{idol.vote_percentage.toFixed(2)}%</div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <th className="col-xs-1 text-right">Age</th><td className="col-xs-3">{idol.age}</td>
-              </tr>
-              <tr>
-                <th className="col-xs-1 text-right">Agency</th><td className="col-xs-3">{idol.agency}</td>
-              </tr>
-              <tr>
-                <td className="text-center" colSpan="2">{idol.comment}</td>
-              </tr>
-            </tbody>
-          </table>
         </div>
       );
     }
