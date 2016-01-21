@@ -57,7 +57,7 @@ def update_idols():
         # we don't update previous rank here, this should only be done daily
         # (see update_dailies)
         idol.update(rank=i + 1)
-    print 'Successfully fetched p101 idol data.'
+    print('Successfully fetched p101 idol data.')
 
 
 @manager.command
@@ -73,7 +73,7 @@ def update_dailies():
         else:
             daily = DailyHistory.create(idol=idol, date=today, vote_percentage=idol.vote_percentage, rank=i + 1)
         idol.update(prev_rank=daily.rank, prev_vote_percentage=daily.vote_percentage)
-    print 'Successfully updated dailies'
+    print('Successfully updated dailies')
 
 
 class Lint(Command):

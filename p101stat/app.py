@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """The app module, containing the app factory function."""
 from flask import Flask, render_template
-from flask_analytics import Analytics
 
 from p101stat import idol, public
 from p101stat.assets import assets
@@ -25,7 +24,6 @@ def create_app(config_object=ProdConfig):
 def register_extensions(app):
     """Register Flask extensions."""
     assets.init_app(app)
-    Analytics(app)
     babel.init_app(app)
     bcrypt.init_app(app)
     cache.init_app(app)
