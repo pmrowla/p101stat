@@ -1,7 +1,39 @@
 /** @jsx React.DOM */
+$(document).ready(function() {
+
+});
+
 var Bs = window.ReactBootstrap;
 
-var IdolTabDiv = React.createClass({
+var Nav = React.createClass({
+  render: function() {
+    return (
+      <Bs.Navbar inverse fixedTop>
+        <Bs.Navbar.Header>
+          <Bs.Navbar.Toggle />
+          <Bs.Navbar.Brand>
+            <a href="/">Produce 101 Stats</a>
+          </Bs.Navbar.Brand>
+        </Bs.Navbar.Header>
+        <Bs.Navbar.Collapse>
+          <Bs.Nav>
+            <Bs.NavItem eventKey={1} href="/">Current Rankings</Bs.NavItem>
+          </Bs.Nav>
+        </Bs.Navbar.Collapse>
+      </Bs.Navbar>
+    );
+  }
+});
+
+if (null !== document.getElementById('main-nav'))
+{
+  ReactDOM.render(
+    <Nav />,
+    document.getElementById('main-nav')
+  );
+}
+
+var IdolRankDiv = React.createClass({
   loadIdolsFromServer: function() {
     var idol_payload = {
       "order_by": [{"field": "vote_percentage", "direction": "desc"}]
@@ -175,7 +207,10 @@ var IdolModalDialog = React.createClass({
   }
 });
 
-ReactDOM.render(
-  <IdolTabDiv idol_url="/api/idols" />,
-  document.getElementById('idol-live-tab')
-);
+if (null !== document.getElementById('idol-rank-div'))
+{
+  ReactDOM.render(
+    <IdolRankDiv idol_url="/api/idols" />,
+    document.getElementById('idol-rank-div')
+  );
+}

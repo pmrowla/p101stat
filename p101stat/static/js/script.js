@@ -1,8 +1,40 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /** @jsx React.DOM */
+$(document).ready(function() {
+
+});
+
 var Bs = window.ReactBootstrap;
 
-var IdolTabDiv = React.createClass({displayName: "IdolTabDiv",
+var Nav = React.createClass({displayName: "Nav",
+  render: function() {
+    return (
+      React.createElement(Bs.Navbar, {inverse: true, fixedTop: true}, 
+        React.createElement(Bs.Navbar.Header, null, 
+          React.createElement(Bs.Navbar.Toggle, null), 
+          React.createElement(Bs.Navbar.Brand, null, 
+            React.createElement("a", {href: "/"}, "Produce 101 Stats")
+          )
+        ), 
+        React.createElement(Bs.Navbar.Collapse, null, 
+          React.createElement(Bs.Nav, null, 
+            React.createElement(Bs.NavItem, {eventKey: 1, href: "/"}, "Current Rankings")
+          )
+        )
+      )
+    );
+  }
+});
+
+if (null !== document.getElementById('main-nav'))
+{
+  ReactDOM.render(
+    React.createElement(Nav, null),
+    document.getElementById('main-nav')
+  );
+}
+
+var IdolRankDiv = React.createClass({displayName: "IdolRankDiv",
   loadIdolsFromServer: function() {
     var idol_payload = {
       "order_by": [{"field": "vote_percentage", "direction": "desc"}]
@@ -176,10 +208,13 @@ var IdolModalDialog = React.createClass({displayName: "IdolModalDialog",
   }
 });
 
-ReactDOM.render(
-  React.createElement(IdolTabDiv, {idol_url: "/api/idols"}),
-  document.getElementById('idol-live-tab')
-);
+if (null !== document.getElementById('idol-rank-div'))
+{
+  ReactDOM.render(
+    React.createElement(IdolRankDiv, {idol_url: "/api/idols"}),
+    document.getElementById('idol-rank-div')
+  );
+}
 
 
 },{}]},{},[1])
