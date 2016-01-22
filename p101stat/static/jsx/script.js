@@ -1,10 +1,5 @@
 /** @jsx React.DOM */
-
-(function($, window) {
-
-
-
-}).call(this, jQuery, window);
+var Bs = window.ReactBootstrap;
 
 var IdolTabDiv = React.createClass({
   loadIdolsFromServer: function() {
@@ -27,7 +22,7 @@ var IdolTabDiv = React.createClass({
   },
 
   getInitialState: function() {
-    return {idolData: {"objects": []}, selectedIndex: 0};
+    return {idolData: {"objects": []}, selectedIndex: 0, showIdolModal: false};
   },
 
   componentDidMount: function() {
@@ -35,23 +30,23 @@ var IdolTabDiv = React.createClass({
   },
 
   handleIdolSelect: function(i, event) {
-    this.setState({selectedIndex: i});
+    this.setState({selectedIndex: i, showIdolModal: true});
+  },
+
+  close() {
+    this.setState({showIdolModal: false});
   },
 
   render: function() {
     var i;
     return (
       <div>
-        <div className="modal fade" id="idolModal" tabIndex="-1" role="dialog" aria-labelledby="idolModal">
-          <IdolModalDialog idol={this.state.idolData.objects[this.state.selectedIndex]} />
-        </div>
-        <div className="row-fluid">
-          <div className="col-md-12">
-            <div>
-              <RankTable idols={this.state.idolData.objects} selectedIndex={this.state.selectedIndex} onClick={this.handleIdolSelect}/>
-            </div>
-          </div>
-        </div>
+        <IdolModalDialog show={this.state.showIdolModal} onHide={this.close} idol={this.state.idolData.objects[this.state.selectedIndex]} />
+        <Bs.Row fluid="true">
+          <Bs.Col md={12}>
+            <RankTable idols={this.state.idolData.objects} selectedIndex={this.state.selectedIndex} onClick={this.handleIdolSelect}/>
+          </Bs.Col>
+        </Bs.Row>
       </div>
     );
   }
@@ -65,7 +60,7 @@ var RankTable = React.createClass({
       );
     }.bind(this));
     return (
-      <table className="table table-hover">
+      <Bs.Table hover={true}>
         <thead>
           <tr>
             <th className="text-right">Rank</th>
@@ -78,7 +73,7 @@ var RankTable = React.createClass({
         <tbody>
           {rankRows}
         </tbody>
-      </table>
+      </Bs.Table>
     );
   }
 });
@@ -141,39 +136,36 @@ var IdolModalDialog = React.createClass({
       }
       var img_url="/static/public/img/" + idol.id + "_thumb.jpg";
       return (
-        <div className="modal-dialog" role="document">
-          <div className="modal-content">
-            <div className="modal-header">
-              <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <h4 className="modal-title" id="idolModalLabel">#{idol.rank} - {idol.name_kr} {name_en}</h4>
-            </div>
-            <div className="modal-body">
-              <div className="row">
-                <img className="img-responsive center-block img-circle" src={img_url} alt={idol.name_kr} height="300" width="300" />
-                <table className="table">
-                  <tbody>
-                    <tr>
-                      <td colSpan="2" className="col-xs-4">
-                        <div className="progress" style={{marginBottom: "0"}}>
-                          <div className="progress-bar" role="progressbar" aria-valuenow={idol.vote_percentage.toFixed(0)} aria-valuemin="0" aria-valuemax="100" style={{width: idol.vote_percentage.toFixed(0) + '%', minWidth: "4em"}}>{idol.vote_percentage.toFixed(2)}%</div>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <th className="col-xs-1 text-right">Age</th><td className="col-xs-3">{idol.age}</td>
-                    </tr>
-                    <tr>
-                      <th className="col-xs-1 text-right">Agency</th><td className="col-xs-3">{idol.agency}</td>
-                    </tr>
-                    <tr>
-                      <td className="text-center" colSpan="2">{idol.comment}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
+        <Bs.Modal show={this.props.show} onHide={this.props.onHide}>
+          <Bs.ModalHeader closeButton>
+            <Bs.ModalTitle>#{idol.rank} - {idol.name_kr} {name_en}</Bs.ModalTitle>
+          </Bs.ModalHeader>
+          <Bs.ModalBody>
+            <Bs.Row>
+              <Bs.Image circle responsive img className="center-block" src={img_url} alt={idol.name_kr} height="300" width="300" />
+              <Bs.Table>
+                <tbody>
+                  <tr>
+                    <td colSpan="2" className="col-xs-4">
+                      <div className="progress" style={{marginBottom: "0"}}>
+                        <div className="progress-bar" role="progressbar" aria-valuenow={idol.vote_percentage.toFixed(0)} aria-valuemin="0" aria-valuemax="100" style={{width: idol.vote_percentage.toFixed(0) + '%', minWidth: "4em"}}>{idol.vote_percentage.toFixed(2)}%</div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th className="col-xs-1 text-right">Age</th><td className="col-xs-3">{idol.age}</td>
+                  </tr>
+                  <tr>
+                    <th className="col-xs-1 text-right">Agency</th><td className="col-xs-3">{idol.agency}</td>
+                  </tr>
+                  <tr>
+                    <td className="text-center" colSpan="2">{idol.comment}</td>
+                  </tr>
+                </tbody>
+              </Bs.Table>
+            </Bs.Row>
+          </Bs.ModalBody>
+        </Bs.Modal>
       );
     }
     else
