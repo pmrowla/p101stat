@@ -7,7 +7,7 @@ Produce 101 Stats
   :target: https://coveralls.io/github/pmrowla/p101stat?branch=master
 
 
-Flask app for viewing Produce 101 vote statistics
+Webapp for viewing Produce 101 vote statistics. Flask backend and React frontend.
 
-
-All data via Mnet.
+The Mnet API is undocumented but if you are interested in using it the API fetch code in p101stat/utils.py should be pretty self explanatory.
+The API for the p101stat website is also open to the internet, if you use it please be mindful of your bandwidth usage.
