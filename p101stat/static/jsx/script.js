@@ -18,6 +18,7 @@ var Nav = React.createClass({
         <Bs.Navbar.Collapse>
           <Bs.Nav>
             <Bs.NavItem eventKey={1} href="/">Current Rankings</Bs.NavItem>
+            <Bs.NavItem eventKey={2} href="/about/">About</Bs.NavItem>
           </Bs.Nav>
         </Bs.Navbar.Collapse>
       </Bs.Navbar>

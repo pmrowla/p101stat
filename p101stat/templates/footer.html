@@ -1,11 +1,9 @@
 <footer>
-  <small>
-  <ul class="company">
-    <li>All voting data refreshed hourly via Mnet's <a href="http://www.produce101event.com/main.php">official Produce 101 site</a>. Daily rankings reset at midnight UTC.</li>
-    {% if last_updated %}
-    <br />
-    <li><i>Last updated: {{ last_updated|timedeltaformat }} ago.</i></li>
-    {% endif %}
-  </ul>
-  </small>
+<ul class="company">
+  <li><small>All voting data is refreshed hourly via Mnet's <a href="http://www.produce101event.com/main.php">official Produce 101 site</a>. Daily rankings reset at midnight UTC.</small></li>
+  {% if last_updated %}
+  <li><small><i>Last updated: {{ last_updated|timedeltaformat }} ago.</i></small></li>
+  {% endif %}
+  <li><small>All Produce 101 related content and data is owned by Mnet. All other content is copyright &copy; 2016 <a href="http://pmrowla.com">Peter Rowlands</a>.</small></li>
+</ul>
 </footer>

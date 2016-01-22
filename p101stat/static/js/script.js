@@ -18,7 +18,8 @@ var Nav = React.createClass({displayName: "Nav",
         ), 
         React.createElement(Bs.Navbar.Collapse, null, 
           React.createElement(Bs.Nav, null, 
-            React.createElement(Bs.NavItem, {eventKey: 1, href: "/"}, "Current Rankings")
+            React.createElement(Bs.NavItem, {eventKey: 1, href: "/"}, "Current Rankings"), 
+            React.createElement(Bs.NavItem, {eventKey: 2, href: "/about/"}, "About")
           )
         )
       )
