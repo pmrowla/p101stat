@@ -4,6 +4,7 @@
 from __future__ import unicode_literals
 
 import os
+import sys
 from datetime import datetime
 from glob import glob
 from subprocess import call
@@ -44,15 +45,21 @@ def test():
 def update_idols():
     """Update db entries for all p101 idols."""
     for i in range(1, 102):
+        idol = Idol.query.filter_by(idx=i).first()
         idol_data = fetch_idol(i)
         if idol_data:
-            idol = Idol.query.filter_by(idx=i).first()
             if idol:
                 idol.update(vote_percentage=float(idol_data['per']), last_updated=datetime.utcnow())
+                print('Updated existing idol {}'.format(idol.name_kr))
             else:
                 Idol.create(idx=i, name_kr=idol_data['name'], age=int(idol_data['age']),
                             agency=idol_data['agency'], comment=idol_data['comment'],
                             vote_percentage=float(idol_data['per']))
+                print('Created new idol {}'.format(idol.name_kr))
+        elif idol:
+            print('Could not fetch data for idol {}'.format(idol.name_kr), sys.stderr)
+        else:
+            print('Could not fetch data for index {}'.format(idx), sys.stderr)
     for i, idol in enumerate(Idol.query.order_by(desc(Idol.vote_percentage)).all()):
         # we don't update previous rank here, this should only be done daily
         # (see update_dailies)
