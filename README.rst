@@ -4,13 +4,21 @@ Produce 101 Stats
 .. image:: https://travis-ci.org/pmrowla/p101stat.svg
     :target: https://travis-ci.org/pmrowla/p101stat
 .. image:: https://coveralls.io/repos/pmrowla/p101stat/badge.svg?branch=master&service=github
-  :target: https://coveralls.io/github/pmrowla/p101stat?branch=master
+    :target: https://coveralls.io/github/pmrowla/p101stat?branch=master
 
 
 Webapp for viewing Produce 101 vote statistics. Flask backend and React frontend.
 
 The Mnet API is undocumented but if you are interested in using it the API fetch code in p101stat/utils.py should be pretty self explanatory.
 The API for the p101stat website is also open to the internet, if you use it please be mindful of your bandwidth usage.
+
+This app should run properly on any versions of Python that are supported by Flask (2.7 or >3.3 at the time of writing).
+
+----------
+Deployment
+----------
+This app is designed to be easily deployed on Heroku.
+However, it appears that Mnet may be throttling and/or blocking any API requests from Heroku/AWS IP addresses, and as a result idol data cannot be reliably fetched from Heroku deployments at this time.
 
 -------------
 API endpoints
@@ -39,4 +47,5 @@ For details on how to query the Mnet API yourself, see ``fetch_idol`` in `utils.
     # Update the daily history table
     $ python manage.py update_dailies
 
-To recreate the behavior of the p101.pmrowla.com site, just run update_idols as an hourly cron job, and update_dailies as a daily cron job.
+These two commands are designed to be run using Heroku scheduler tasks, but they can also be run via standard cron jobs.
+To recreate the behavior of the p101.pmrowla.com site, just run ``update_idols`` hourly, and ``update_dailies`` daily.
