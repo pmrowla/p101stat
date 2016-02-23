@@ -28,15 +28,15 @@ For specifics on building API queries see the `Flask-Restless documentation <htt
 Fetching Mnet data
 ------------------
 
-Basic functionality for populating the p101stat database from Mnet's API is included in the manage.py script.
-For details on how to query the Mnet API yourself, look into the data fetching functions in p101stat/utils.py
+Basic functionality for populating the p101stat database from Mnet's API is included in the `manage.py <./manage.py>`_ script.
+For details on how to query the Mnet API yourself, see ``fetch_idol`` in `utils.py <./p101stat/utils.py#L16-L24>`_.
 
 .. code:: bash
-# Fetch current vote totals and update entries for each Produce 101 idol
-$ python manage.py update_idols
 
-.. code:: bash
-# Update the daily history table
-$ python manage.py update_dailies
+    # Fetch current vote totals and update entries for each Produce 101 idol
+    $ python manage.py update_idols
+
+    # Update the daily history table
+    $ python manage.py update_dailies
 
 To recreate the behavior of the p101.pmrowla.com site, just run update_idols as an hourly cron job, and update_dailies as a daily cron job.
